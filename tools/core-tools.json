@@ -27,7 +27,7 @@
     "name": "code-run",
     "label": "Piston Code Sandbox",
     "description": "Execute code in a secure sandbox. Supports Python, JS, Go, Rust, and more.",
-    "base_url": "https://piston-production.up.railway.app",
+    "base_url": "https://piston-production-c4b2.up.railway.app",
     "endpoint": "/api/v2/execute",
     "method": "POST",
     "auth": { "type": "none", "source": "env" },
