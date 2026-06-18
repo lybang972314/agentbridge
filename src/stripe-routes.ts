@@ -90,7 +90,7 @@ export function registerStripeRoutes(app: FastifyInstance): void {
             request.log.info({ email, tier }, "New user created via Stripe");
           } else {
             const plan = PRICING_TIERS.find((t) => t.id === tier);
-            updateSubscription(customerId, "active", tier, plan?.calls_per_day ?? 10000);
+            updateSubscription(customerId, "active", tier, plan?.daily_limit ?? 5000);
             request.log.info({ email, tier }, "Subscription updated via Stripe");
           }
         }
