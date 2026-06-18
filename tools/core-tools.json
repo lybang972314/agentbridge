@@ -3,7 +3,7 @@
     "name": "web-search",
     "label": "SearXNG Web Search",
     "description": "Search the web via self-hosted SearXNG. Returns titles, URLs, and snippets. No API key needed.",
-    "base_url": "https://searxng-production.up.railway.app",
+    "base_url": "https://searxng-production-ad04.up.railway.app",
     "endpoint": "/search?q=:query&format=json&categories=general",
     "method": "GET",
     "auth": { "type": "none", "source": "env" },
