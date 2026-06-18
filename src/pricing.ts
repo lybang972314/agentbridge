@@ -1,4 +1,4 @@
-// Pricing — two tiers, one decision. Free to start. $5 to scale.
+// Pricing — two tiers, one decision. Free to start. $0.99 to scale.
 
 export interface PricingTier {
   id: string;
@@ -35,7 +35,7 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: "pro",
     name: "Pro",
-    price: 5,
+    price: 0.99,
     stripe_price_id: process.env.STRIPE_PRO_PRICE_ID ?? "price_xxx",
     tools: 9999,
     calls_per_month: 50_000,
