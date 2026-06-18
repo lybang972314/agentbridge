@@ -1,4 +1,4 @@
-// MCP Server Adapter — exposes the MCP Gateway as a native MCP stdio server
+// MCP Server Adapter — exposes the AgentBridge as a native MCP stdio server
 // so Hermes, Codex, Claude Desktop, and other MCP clients can discover and use tools.
 //
 // Usage:  npx tsx src/mcp.ts
@@ -22,7 +22,7 @@ const TOOLS_DIR = join(__dirname, "..", "tools");
 const toolCount = loadTools(TOOLS_DIR);
 
 const server = new Server(
-  { name: "mcp-gateway", version: "0.2.0" },
+  { name: "agentbridge", version: "0.2.0" },
   {
     capabilities: {
       tools: {},
@@ -122,11 +122,11 @@ async function main() {
   await server.connect(transport);
   
   // Log to stderr (stdio is for MCP protocol messages, stderr is for debugging)
-  console.error(`\n  MCP Gateway v0.2.0 — ${toolCount} tools loaded`);
+  console.error(`\n  AgentBridge v0.2.0 — ${toolCount} tools loaded`);
   console.error(`  Connected via stdio. Waiting for MCP client requests...\n`);
 }
 
 main().catch((err) => {
-  console.error("MCP Gateway fatal error:", err);
+  console.error("AgentBridge fatal error:", err);
   process.exit(1);
 });

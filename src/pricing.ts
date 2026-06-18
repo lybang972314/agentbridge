@@ -1,4 +1,4 @@
-// Pricing plans for the MCP Gateway
+// Pricing plans for the AgentBridge
 
 export interface PricingTier {
   id: string;

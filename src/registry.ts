@@ -1,4 +1,4 @@
-// Tool Registry — stores and manages tool definitions for the MCP Gateway
+// Tool Registry — stores and manages tool definitions for the AgentBridge
 // Tools are defined in JSON files under /tools/ and loaded at startup
 
 import { readFileSync, readdirSync } from "node:fs";

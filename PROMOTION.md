@@ -1,4 +1,4 @@
-# MCP Gateway — Promotion Plan & Content
+# AgentBridge — Promotion Plan & Content
 
 ## Posting Strategy
 
@@ -13,12 +13,12 @@
 ## 1. Hacker News — Show HN
 
 ### Title
-Show HN: MCP Gateway — One endpoint for all your AI agent tools
+Show HN: AgentBridge — One endpoint for all your AI agent tools
 
 ### Body
 I got tired of writing 5 different auth integrations every time I built an AI agent. GitHub uses Bearer tokens in headers, OpenWeather puts the key in query params, Resend wants it in Authorization — and they all return different error formats.
 
-So I built MCP Gateway: a single proxy that normalizes all of this.
+So I built AgentBridge: a single proxy that normalizes all of this.
 
 How it works:
 - Define your tools as JSON (endpoint, auth type, params)
@@ -39,7 +39,7 @@ Function calling is great for simple cases. The problem starts when you have 10+
 ## 2. IndieHackers — Product Launch
 
 ### Title
-I built an MCP Gateway to solve AI agent tool integration hell — $0 MRR, looking for feedback
+I built an AgentBridge to solve AI agent tool integration hell — $0 MRR, looking for feedback
 
 ### Body
 After spending weeks on IndieHackers reading about AI agent failures (shoutout to the "3 months, 0 customers on Reddit" thread), one theme kept coming up:
@@ -48,7 +48,7 @@ AI agents don't fail because they can't reason. They fail because TOOL INTEGRATI
 
 Every API wants auth in a different place. Every service returns errors differently. Every tool needs its own rate limit logic.
 
-So I built MCP Gateway — a single proxy layer that handles all of this:
+So I built AgentBridge — a single proxy layer that handles all of this:
 
 - Define tools as JSON → Gateway normalizes everything
 - Built-in rate limiting per tool (stop getting API-banned)
@@ -80,7 +80,7 @@ Every time I build an AI agent:
 That's 5 different auth implementations before the agent does anything useful.
 
 ### Tweet 3 (the solution)
-MCP Gateway: One endpoint for all your agent tools.
+AgentBridge: One endpoint for all your agent tools.
 
 Define tools as JSON. Your agent calls POST /gateway/:toolName. Gateway handles the rest.
 
@@ -108,7 +108,7 @@ Built in 2 weeks. Looking for first users and feedback.
 - r/artificial: "What's missing in the AI agent ecosystem?"
 
 ### Reply template (general):
-I've been building AI agents and the tool integration part is always the worst. I ended up building MCP Gateway — it's a proxy that normalizes all your tool APIs behind one endpoint. Define tools as JSON, get unified auth, rate limiting, and logging for free. Works with Codex and Claude Desktop natively. Free tier available if you want to try it: [link]
+I've been building AI agents and the tool integration part is always the worst. I ended up building AgentBridge — it's a proxy that normalizes all your tool APIs behind one endpoint. Define tools as JSON, get unified auth, rate limiting, and logging for free. Works with Codex and Claude Desktop natively. Free tier available if you want to try it: [link]
 
 ### Reply template (MCP-specific):
 If you're using Claude Desktop or Codex with MCP, I built a gateway that auto-discovers your tools via the MCP protocol. Just add the server config and all your registered tools show up in the agent. Saves writing MCP server wrappers for every API: [link]
@@ -118,7 +118,7 @@ If you're using Claude Desktop or Codex with MCP, I built a gateway that auto-di
 ## 5. AI Agent Discord Communities
 
 ### Post template:
-Hey folks — I've been struggling with tool integration in my AI agents. Every API has different auth, different error formats, different rate limits. So I built MCP Gateway to solve this once and for all:
+Hey folks — I've been struggling with tool integration in my AI agents. Every API has different auth, different error formats, different rate limits. So I built AgentBridge to solve this once and for all:
 
 - Define tools as JSON, call via one endpoint
 - Unified auth (API key, Bearer, custom header)

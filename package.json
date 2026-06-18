@@ -1,5 +1,5 @@
 {
-  "name": "mcp-gateway",
+  "name": "agentbridge",
   "version": "0.2.0",
   "description": "AI Agent MCP Unified Gateway — one endpoint for all your agent tools. HTTP + MCP dual protocol.",
   "type": "module",

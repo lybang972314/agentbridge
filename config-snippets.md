@@ -1,13 +1,13 @@
-# MCP Gateway — Configuration Snippets
+# AgentBridge — Configuration Snippets
 
 Add the gateway as an MCP server to your AI agent. Pick your platform:
 
 ## Codex (~/.codex/config.toml)
 
 ```toml
-[mcp_servers.mcp-gateway]
-command = "/Users/lybang/Documents/赚钱/mcp-gateway/node_modules/.bin/tsx"
-args = ["/Users/lybang/Documents/赚钱/mcp-gateway/src/mcp.ts"]
+[mcp_servers.agentbridge]
+command = "/Users/lybang/Documents/赚钱/agentbridge/node_modules/.bin/tsx"
+args = ["/Users/lybang/Documents/赚钱/agentbridge/src/mcp.ts"]
 startup_timeout_sec = 30
 ```
 
@@ -16,9 +16,9 @@ startup_timeout_sec = 30
 ```json
 {
   "mcpServers": {
-    "mcp-gateway": {
+    "agentbridge": {
       "command": "npx",
-      "args": ["tsx", "/Users/lybang/Documents/赚钱/mcp-gateway/src/mcp.ts"]
+      "args": ["tsx", "/Users/lybang/Documents/赚钱/agentbridge/src/mcp.ts"]
     }
   }
 }
@@ -27,8 +27,8 @@ startup_timeout_sec = 30
 ## Hermes
 
 Hermes uses the same MCP stdio protocol. Configure it with:
-- Command: `/Users/lybang/Documents/赚钱/mcp-gateway/node_modules/.bin/tsx`
-- Args: `/Users/lybang/Documents/赚钱/mcp-gateway/src/mcp.ts`
+- Command: `/Users/lybang/Documents/赚钱/agentbridge/node_modules/.bin/tsx`
+- Args: `/Users/lybang/Documents/赚钱/agentbridge/src/mcp.ts`
 
 ## Verification
 

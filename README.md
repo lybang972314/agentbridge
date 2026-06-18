@@ -1,9 +1,9 @@
-# MCP Gateway
+# AgentBridge
 
 > **One endpoint for all your AI agent tools.** Unified auth, rate limiting, and observability.
 > Dual protocol: HTTP REST + MCP stdio.
 
-AI agents fail not because they can't reason — they fail because tool integration is chaos: 5 APIs, 5 auth methods, 5 formats. MCP Gateway unifies this into a single proxy, so your agent focuses on reasoning while the gateway handles the plumbing.
+AI agents fail not because they can't reason — they fail because tool integration is chaos: 5 APIs, 5 auth methods, 5 formats. AgentBridge unifies this into a single proxy, so your agent focuses on reasoning while the gateway handles the plumbing.
 
 ## Quick Start
 
@@ -33,9 +33,9 @@ Already configured. If you need to re-add:
 
 ```toml
 # ~/.codex/config.toml
-[mcp_servers.mcp-gateway]
-command = "/Users/lybang/Documents/赚钱/mcp-gateway/node_modules/.bin/tsx"
-args = ["/Users/lybang/Documents/赚钱/mcp-gateway/src/mcp.ts"]
+[mcp_servers.agentbridge]
+command = "/Users/lybang/Documents/赚钱/agentbridge/node_modules/.bin/tsx"
+args = ["/Users/lybang/Documents/赚钱/agentbridge/src/mcp.ts"]
 startup_timeout_sec = 30
 ```
 
@@ -46,7 +46,7 @@ See [config-snippets.md](config-snippets.md) for Hermes and Claude Desktop confi
 ## How It Works
 
 ```
-AI Agent → tools/call (MCP) → MCP Gateway → Upstream API
+AI Agent → tools/call (MCP) → AgentBridge → Upstream API
                   or
 AI Agent → POST /gateway/:toolName (HTTP) → Gateway Server → Upstream API
                 ↓

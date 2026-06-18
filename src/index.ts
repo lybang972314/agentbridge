@@ -37,7 +37,7 @@ async function main() {
   app.get("/", async (_req, reply) => reply.sendFile("index.html"));
 
   await app.listen({ port: PORT, host: "0.0.0.0" });
-  console.log(`\n  MCP Gateway v0.3.0 — http://localhost:${PORT}\n`);
+  console.log(`\n  AgentBridge v0.3.0 — http://localhost:${PORT}\n`);
 }
 
 main().catch((err) => {
