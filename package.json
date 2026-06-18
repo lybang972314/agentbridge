@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "node --env-file=.env --import tsx --watch src/index.ts",
-    "start": "node --env-file=.env --import tsx src/index.ts",
+    "start": "npx tsx src/index.ts",
     "mcp": "node --import tsx src/mcp.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
   },
   "dependencies": {
     "@fastify/cors": "^11.1.0",
@@ -25,5 +26,8 @@
     "@types/uuid": "^10.0.0",
     "tsx": "^4.19.0",
     "typescript": "^5.8.0"
+  },
+  "engines": {
+    "node": "22.x"
   }
 }
