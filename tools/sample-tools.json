@@ -1,0 +1,90 @@
+[
+  {
+    "name": "github-search",
+    "label": "GitHub Code Search",
+    "description": "Search GitHub repositories, code, and issues",
+    "base_url": "https://api.github.com",
+    "endpoint": "/search/repositories?q=:query",
+    "method": "GET",
+    "auth": {
+      "type": "bearer",
+      "header_name": "Authorization",
+      "prefix": "Bearer ",
+      "source": "passthrough",
+      "env_var": "GITHUB_TOKEN"
+    },
+    "rate_limit_rpm": 30,
+    "enabled": true,
+    "category": "Developer Tools"
+  },
+  {
+    "name": "weather-current",
+    "label": "OpenWeather Current",
+    "description": "Get current weather for any city",
+    "base_url": "https://api.openweathermap.org",
+    "endpoint": "/data/2.5/weather?q=:city&appid=:api_key",
+    "method": "GET",
+    "auth": {
+      "type": "api_key",
+      "header_name": "X-API-Key",
+      "source": "env",
+      "env_var": "OPENWEATHER_API_KEY"
+    },
+    "rate_limit_rpm": 60,
+    "enabled": true,
+    "category": "Data APIs"
+  },
+  {
+    "name": "send-email",
+    "label": "Resend Email",
+    "description": "Send transactional emails via Resend",
+    "base_url": "https://api.resend.com",
+    "endpoint": "/emails",
+    "method": "POST",
+    "auth": {
+      "type": "bearer",
+      "header_name": "Authorization",
+      "prefix": "Bearer ",
+      "source": "env",
+      "env_var": "RESEND_API_KEY"
+    },
+    "rate_limit_rpm": 10,
+    "enabled": true,
+    "category": "Communication"
+  },
+  {
+    "name": "ai-chat",
+    "label": "OpenAI Chat",
+    "description": "Send a prompt to GPT via OpenAI API",
+    "base_url": "https://api.openai.com",
+    "endpoint": "/v1/chat/completions",
+    "method": "POST",
+    "auth": {
+      "type": "bearer",
+      "header_name": "Authorization",
+      "prefix": "Bearer ",
+      "source": "passthrough",
+      "env_var": "OPENAI_API_KEY"
+    },
+    "rate_limit_rpm": 20,
+    "enabled": true,
+    "category": "AI / ML"
+  },
+  {
+    "name": "currency-convert",
+    "label": "ExchangeRate Currency",
+    "description": "Convert between currencies using live rates",
+    "base_url": "https://v6.exchangerate-api.com",
+    "endpoint": "/v6/:api_key/latest/:base_currency",
+    "method": "GET",
+    "auth": {
+      "type": "api_key",
+      "header_name": "X-API-Key",
+      "source": "env",
+      "env_var": "EXCHANGERATE_API_KEY"
+    },
+    "rate_limit_rpm": 100,
+    "enabled": false,
+    "category": "Data APIs"
+  }
+]
