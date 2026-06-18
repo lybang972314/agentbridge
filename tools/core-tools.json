@@ -1,33 +1,24 @@
 [
   {
     "name": "web-search",
-    "label": "Brave Web Search",
-    "description": "Search the web for current information. Returns URLs, titles, and snippets.",
-    "base_url": "https://api.search.brave.com",
-    "endpoint": "/res/v1/web/search?q=:query&count=10",
+    "label": "SearXNG Web Search",
+    "description": "Search the web via self-hosted SearXNG. Returns titles, URLs, and snippets. No API key needed.",
+    "base_url": "https://searxng-production.up.railway.app",
+    "endpoint": "/search?q=:query&format=json&categories=general",
     "method": "GET",
-    "auth": {
-      "type": "custom_header",
-      "header_name": "X-Subscription-Token",
-      "prefix": "",
-      "source": "env",
-      "env_var": "BRAVE_API_KEY"
-    },
+    "auth": { "type": "none", "source": "env" },
     "rate_limit_rpm": 20,
-    "enabled": false,
+    "enabled": true,
     "category": "Search"
   },
   {
     "name": "url-fetch",
     "label": "Jina URL Fetcher",
-    "description": "Fetch any URL and return clean Markdown text. Handles anti-bot pages via headless browser.",
+    "description": "Fetch any URL and return clean Markdown text.",
     "base_url": "https://r.jina.ai",
     "endpoint": "/:url",
     "method": "GET",
-    "auth": {
-      "type": "none",
-      "source": "env"
-    },
+    "auth": { "type": "none", "source": "env" },
     "rate_limit_rpm": 30,
     "enabled": true,
     "category": "Search"
@@ -35,14 +26,11 @@
   {
     "name": "code-run",
     "label": "Piston Code Sandbox",
-    "description": "Execute code in a secure sandbox. Supports Python, JavaScript, TypeScript, Go, Rust, and more.",
-    "base_url": "https://emkc.org",
-    "endpoint": "/api/v2/piston/execute",
+    "description": "Execute code in a secure sandbox. Supports Python, JS, Go, Rust, and more.",
+    "base_url": "https://piston-production.up.railway.app",
+    "endpoint": "/api/v2/execute",
     "method": "POST",
-    "auth": {
-      "type": "none",
-      "source": "env"
-    },
+    "auth": { "type": "none", "source": "env" },
     "rate_limit_rpm": 20,
     "enabled": true,
     "category": "Compute"
