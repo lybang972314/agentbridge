@@ -31,7 +31,7 @@
       "env_var": "OPENWEATHER_API_KEY"
     },
     "rate_limit_rpm": 60,
-    "enabled": true,
+    "enabled": false,
     "category": "Data APIs"
   },
   {

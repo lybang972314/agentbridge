@@ -1,0 +1,38 @@
+[
+  {
+    "name": "hackernews",
+    "label": "Hacker News Search",
+    "description": "Search Hacker News stories, comments, and Show HN posts. Free, no auth required.",
+    "base_url": "https://hn.algolia.com",
+    "endpoint": "/api/v1/search?query=:query&tags=:tags&hitsPerPage=20",
+    "method": "GET",
+    "auth": { "type": "none", "source": "env" },
+    "rate_limit_rpm": 20,
+    "enabled": true,
+    "category": "Community"
+  },
+  {
+    "name": "npm-lookup",
+    "label": "npm Registry Lookup",
+    "description": "Fetch package metadata, versions, and dependencies from the npm registry. Free, no auth.",
+    "base_url": "https://registry.npmjs.org",
+    "endpoint": "/:package_name/latest",
+    "method": "GET",
+    "auth": { "type": "none", "source": "env" },
+    "rate_limit_rpm": 15,
+    "enabled": true,
+    "category": "Developer"
+  },
+  {
+    "name": "whois-lookup",
+    "label": "WHOIS Domain Lookup",
+    "description": "Check domain registration status, expiry dates, and nameservers via RDAP. Free, no auth.",
+    "base_url": "https://rdap.verisign.com",
+    "endpoint": "/com/v1/domain/:domain",
+    "method": "GET",
+    "auth": { "type": "none", "source": "env" },
+    "rate_limit_rpm": 10,
+    "enabled": true,
+    "category": "Domain"
+  }
+]
