@@ -4,286 +4,174 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AgentBridge — One endpoint for all your AI agent tools</title>
-<meta name="description" content="Stop writing 5 auth integrations for every AI agent. AgentBridge unifies tool calling behind a single endpoint.">
 <style>
   :root {
-    --bg: #06060c;
-    --surface: #0d0d18;
-    --surface2: #141428;
-    --border: #1e1e38;
-    --text: #e8e8f4;
-    --text2: #8080a8;
-    --green: #3dd68c;
-    --blue: #4671ff;
-    --purple: #8b5cf6;
-    --amber: #ffb224;
-    --radius: 12px;
+    --bg: #06060c; --surface: #0d0d18; --surface2: #141428;
+    --border: #1e1e38; --text: #e8e8f4; --text2: #8080a8;
+    --green: #3dd68c; --blue: #4671ff; --purple: #8b5cf6; --amber: #ffb224;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-  /* Ambient gradient */
-  body::before {
-    content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(70,113,255,0.08), transparent 60%),
-                radial-gradient(ellipse 60% 50% at 80% 40%, rgba(139,92,246,0.06), transparent 70%);
-    pointer-events: none; z-index: 0;
-  }
-  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
-
-  /* Nav */
-  nav { position: sticky; top: 0; z-index: 100; background: rgba(6,6,12,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
-  nav .container { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; }
-  nav .logo { font-weight: 700; font-size: 17px; letter-spacing: -0.03em; }
-  nav .logo span { color: var(--blue); }
-  nav .links { display: flex; gap: 20px; }
-  nav .links a { color: var(--text2); text-decoration: none; font-size: 14px; transition: color .2s; }
-  nav .links a:hover { color: var(--text); }
-
-  /* Hero */
-  .hero { padding: 100px 0 60px; text-align: center; }
-  .hero h1 { font-size: 48px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 20px; }
-  .hero h1 mark { background: linear-gradient(135deg, var(--blue), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .hero p { font-size: 18px; color: var(--text2); max-width: 560px; margin: 0 auto 32px; }
-  .hero .cta-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 600;
-    text-decoration: none; cursor: pointer; border: none;
-    transition: transform .15s, box-shadow .15s;
-  }
-  .btn:hover { transform: translateY(-1px); }
-  .btn-primary { background: var(--blue); color: #fff; box-shadow: 0 4px 20px rgba(70,113,255,0.3); }
-  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
-  .btn-outline:hover { border-color: var(--text2); }
-
-  /* Code block */
-  .code-demo {
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 20px 24px; max-width: 600px; margin: 40px auto 0; text-align: left;
-    font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; overflow-x: auto;
-  }
-  .code-demo .line { display: block; }
-  .code-demo .comment { color: #555; }
-  .code-demo .cmd { color: var(--blue); }
-  .code-demo .str { color: var(--green); }
-  .code-demo .key { color: var(--amber); }
-
-  /* Problem section */
-  .problem { padding: 80px 0; }
-  .section-title { font-size: 32px; font-weight: 700; letter-spacing: -0.03em; text-align: center; margin-bottom: 16px; }
-  .section-sub { text-align: center; color: var(--text2); margin-bottom: 48px; font-size: 16px; }
-  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 700px; margin: 0 auto; }
-  .compare-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
-  .compare-card.bad { border-color: rgba(229,72,77,0.3); }
-  .compare-card.good { border-color: rgba(61,214,140,0.3); }
-  .compare-card h4 { font-size: 14px; margin-bottom: 12px; font-weight: 600; }
-  .compare-card ul { list-style: none; font-size: 13px; }
-  .compare-card li { padding: 4px 0; color: var(--text2); }
-  .compare-card .icon { margin-right: 8px; }
-
-  /* Pricing */
-  .pricing { padding: 80px 0; }
-  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-  .price-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 28px 24px; position: relative; transition: border-color .2s;
-  }
-  .price-card.featured { border-color: var(--blue); box-shadow: 0 0 30px rgba(70,113,255,0.08); }
-  .price-card .badge {
-    position: absolute; top: -10px; right: 20px;
-    background: var(--blue); color: #fff; font-size: 11px; font-weight: 600;
-    padding: 3px 10px; border-radius: 20px;
-  }
-  .price-card h3 { font-size: 18px; margin-bottom: 8px; }
-  .price-card .price { font-size: 36px; font-weight: 800; margin-bottom: 2px; }
-  .price-card .price-period { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
-  .price-card ul { list-style: none; font-size: 13px; margin-bottom: 24px; }
-  .price-card li { padding: 4px 0; color: var(--text2); }
-  .price-card li::before { content: '✓ '; color: var(--green); margin-right: 6px; }
-  .price-card .btn { width: 100%; justify-content: center; }
-
-  /* Email signup */
-  .signup { padding: 40px 0 80px; }
-  .signup-form {
-    max-width: 400px; margin: 0 auto; display: flex; gap: 8px;
-  }
-  .signup-form input {
-    flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);
-    background: var(--surface2); color: var(--text); font-size: 14px; outline: none;
-  }
-  .signup-form input:focus { border-color: var(--blue); }
-
-  .footer { border-top: 1px solid var(--border); padding: 32px 0; text-align: center; color: var(--text2); font-size: 13px; }
-
-  /* Toast */
-  .toast {
-    position: fixed; bottom: 24px; right: 24px; padding: 14px 20px; border-radius: 8px;
-    background: var(--surface2); border: 1px solid var(--green); color: var(--text);
-    font-size: 14px; z-index: 200; animation: slideUp .3s ease;
-  }
-  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-  @media (max-width: 640px) {
-    .hero h1 { font-size: 32px; }
-    .compare-grid { grid-template-columns: 1fr; }
-    .signup-form { flex-direction: column; }
-  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif; background: var(--bg); color: var(--text); }
+  nav { position: sticky; top:0; z-index:100; background: rgba(6,6,12,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; }
+  .logo { font-weight: 700; font-size: 17px; }
+  .logo span { color: var(--blue); }
+  .nav-links a { color: var(--text2); text-decoration: none; font-size: 14px; margin-left: 20px; }
+  .nav-links a:hover { color: var(--text); }
+  .hero { padding: 80px 24px 40px; text-align: center; max-width: 700px; margin: 0 auto; }
+  .hero h1 { font-size: 40px; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 16px; }
+  .hero h1 span { background: linear-gradient(135deg, var(--blue), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { color: var(--text2); font-size: 16px; margin-bottom: 24px; }
+  .btn { display: inline-block; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; }
+  .btn-primary { background: var(--blue); color: #fff; }
+  .btn-primary:hover { filter: brightness(1.1); }
+  .code-block { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; text-align: left; font-family: 'SF Mono', monospace; font-size: 12px; margin: 24px auto; max-width: 520px; overflow-x: auto; }
+  .code-block .c { color: #555; } .code-block .k { color: var(--amber); } .code-block .s { color: var(--green); }
+  .section { padding: 60px 24px; max-width: 700px; margin: 0 auto; }
+  .section h2 { font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 32px; letter-spacing: -0.02em; }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .compare-card { background: var(--surface); border-radius: 10px; padding: 20px; border: 1px solid var(--border); }
+  .compare-card h3 { font-size: 14px; margin-bottom: 12px; }
+  .compare-card li { font-size: 13px; color: var(--text2); padding: 3px 0; list-style: none; }
+  .pricing-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 500px; margin: 0 auto; }
+  .price-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; text-align: center; }
+  .price-card.featured { border-color: var(--blue); }
+  .price-card h3 { font-size: 16px; margin-bottom: 8px; }
+  .price-card .price { font-size: 32px; font-weight: 800; }
+  .price-card .period { font-size: 12px; color: var(--text2); margin-bottom: 16px; }
+  .price-card ul { font-size: 13px; color: var(--text2); list-style: none; margin-bottom: 20px; text-align: left; }
+  .price-card ul li { padding: 3px 0; }
+  .price-card ul li::before { content: '✓ '; color: var(--green); }
+  .signup { text-align: center; padding: 40px 24px 80px; }
+  .signup input { padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 14px; width: 240px; outline: none; }
+  .signup input:focus { border-color: var(--blue); }
+  .footer { border-top: 1px solid var(--border); padding: 24px; text-align: center; color: var(--text2); font-size: 12px; }
+  .msg { margin-top: 12px; font-size: 14px; min-height: 20px; }
+  .msg.success { color: var(--green); }
+  .msg.error { color: var(--amber); }
+  @media (max-width: 500px) { .compare, .pricing-cards { grid-template-columns: 1fr; } .hero h1 { font-size: 28px; } }
 </style>
 </head>
 <body>
-
 <nav>
-  <div class="container">
-    <div class="logo">MCP<span>Gateway</span></div>
-    <div class="links">
-      <a href="#problem">Problem</a>
-      <a href="#pricing">Pricing</a>
-      <a href="/dashboard">Dashboard</a>
-    </div>
+  <div class="logo">Agent<span>Bridge</span></div>
+  <div class="nav-links">
+    <a href="#problem">Problem</a>
+    <a href="#pricing">Pricing</a>
   </div>
 </nav>
 
 <section class="hero">
-  <div class="container">
-    <h1>One Endpoint.<br><mark>Every AI Tool.</mark></h1>
-    <p>AI agents keep failing — not because they can't reason, but because tool integration is chaos. Stop wiring 5 APIs with 5 auth methods. One proxy, zero headaches.</p>
-    <div class="cta-group">
-      <a href="#pricing" class="btn btn-primary">Get Started Free</a>
-      <a href="#problem" class="btn btn-outline">See How It Works</a>
-    </div>
-    <div class="code-demo">
-      <span class="line"><span class="comment"># Your agent makes ONE call. Gateway handles the rest.</span></span>
-      <span class="line"><span class="cmd">curl</span> -X POST <span class="str">https://gateway.example.com/gateway/github-search</span> \</span>
-      <span class="line">  -H <span class="str">"Content-Type: application/json"</span> \</span>
-      <span class="line">  -d <span class="str">'{"params":{"query":"mcp gateway"},"auth_value":"github_pat_xxx"}'</span></span>
-    </div>
+  <h1>One Endpoint.<br><span>Every AI Tool.</span></h1>
+  <p>AI agents fail — not because of bad reasoning, but because tool integration is chaos. One proxy, zero headaches.</p>
+  <a href="#pricing" class="btn btn-primary">Get Started</a>
+  <div class="code-block">
+    <span class="c"># Your agent makes ONE call</span><br>
+    <span>curl -X POST </span><span class="s">https://pleasant-perception-production-6992.up.railway.app/gateway/github-search</span><span> \</span><br>
+    <span>  -H </span><span class="s">"Content-Type: application/json"</span><span> \</span><br>
+    <span>  -d </span><span class="s">'{"params":{"query":"mcp"}}'</span>
   </div>
 </section>
 
-<section id="problem" class="problem">
-  <div class="container">
-    <h2 class="section-title">The Problem</h2>
-    <p class="section-sub">Your agent wastes 50% of its code on API plumbing instead of reasoning.</p>
-    <div class="compare-grid">
-      <div class="compare-card bad">
-        <h4 style="color:#e5484d">❌ Without Gateway</h4>
-        <ul>
-          <li>5 APIs = 5 auth implementations</li>
-          <li>Different error formats per API</li>
-          <li>No rate limiting — API bans you</li>
-          <li>Zero observability into failures</li>
-          <li>Changing a tool = redeploy agent</li>
-        </ul>
-      </div>
-      <div class="compare-card good">
-        <h4 style="color:#3dd68c">✓ With Gateway</h4>
-        <ul>
-          <li>1 endpoint for all tools</li>
-          <li>Unified JSON error format</li>
-          <li>Built-in rate limiting per tool</li>
-          <li>Full call logging & P99 latency</li>
-          <li>Add tools without touching agent code</li>
-        </ul>
-      </div>
+<section class="section" id="problem">
+  <h2>The Problem</h2>
+  <div class="compare">
+    <div class="compare-card">
+      <h3 style="color:#e5484d">Without Gateway</h3>
+      <ul>
+        <li>5 APIs = 5 auth methods</li>
+        <li>Different error formats</li>
+        <li>No rate limiting</li>
+        <li>Zero observability</li>
+        <li>Change a tool = redeploy agent</li>
+      </ul>
+    </div>
+    <div class="compare-card">
+      <h3 style="color:var(--green)">With AgentBridge</h3>
+      <ul>
+        <li>1 endpoint for all tools</li>
+        <li>Unified JSON errors</li>
+        <li>Built-in rate limiting</li>
+        <li>Full call logging + P99 latency</li>
+        <li>Add tools without touching agent code</li>
+      </ul>
     </div>
   </div>
 </section>
 
-<section id="pricing" class="pricing">
-  <div class="container">
-    <h2 class="section-title">Simple Pricing</h2>
-    <p class="section-sub">Start free. Upgrade when you ship. Cancel anytime.</p>
-    <div class="pricing-grid" id="pricingGrid"></div>
-  </div>
-</section>
-
-<section class="signup">
-  <div class="container" style="text-align:center">
-    <h2 class="section-title" style="font-size:24px">Start Free — No Credit Card</h2>
-    <p class="section-sub" style="margin-bottom:20px">Enter your email. Get an API key. Call tools in 30 seconds.</p>
-    <div class="signup-form" id="signupForm">
-      <input type="email" id="signupEmail" placeholder="you@example.com" />
-      <button class="btn btn-primary" onclick="signup()">Get API Key</button>
+<section class="section" id="pricing">
+  <h2>Simple Pricing</h2>
+  <div class="pricing-cards">
+    <div class="price-card">
+      <h3>Free</h3>
+      <div class="price">$0</div>
+      <div class="period">forever free</div>
+      <ul>
+        <li>3 tools</li>
+        <li>1,000 calls / month</li>
+        <li>24-hour log retention</li>
+        <li>Community support</li>
+      </ul>
+      <a href="#signup" class="btn btn-primary" style="background:var(--surface2);color:var(--text)">Start Free</a>
     </div>
-    <p id="signupResult" style="margin-top:16px;font-size:14px;"></p>
+    <div class="price-card featured">
+      <h3>Pro</h3>
+      <div class="price">$0.99</div>
+      <div class="period">/ month</div>
+      <ul>
+        <li>Unlimited tools</li>
+        <li>50,000 calls / month</li>
+        <li>30-day log retention</li>
+        <li>Priority support</li>
+        <li>Managed auth</li>
+      </ul>
+      <button class="btn btn-primary" onclick="doCheckout()">Subscribe $0.99/mo</button>
+    </div>
   </div>
 </section>
 
-<footer class="footer">
-  <div class="container">AgentBridge — Built for AI agents that just need to work. &copy; 2025</div>
-</footer>
+<section class="signup" id="signup">
+  <h2 style="font-size:20px;margin-bottom:16px">Start Free — No Credit Card</h2>
+  <input type="email" id="email" placeholder="you@example.com" />
+  <button class="btn btn-primary" onclick="doSignup()" style="margin-left:8px">Get API Key</button>
+  <div class="msg" id="msg"></div>
+</section>
 
 <script>
-async function loadPricing() {
-  const grid = document.getElementById('pricingGrid');
-    const plans = {
-      free:  { name:'Starter', price:'$0', period:'forever free', features:['3 tools','100 calls/day','Community','Basic logging'], btn:'Start Free', onclick:'signup()' },
-      pro:   { name:'Pro', price:'$5', period:'/month', features:['Unlimited tools','10,000 calls/day','Priority support','Advanced observability','Managed auth'], btn:'Subscribe', onclick:'checkout(\"pro\")' },
-    };
-    const p = plans[tier];
-    return `<div class="price-card ${tier==='pro'?'featured':''}">
-      ${tier==='pro'?'<div class="badge">Popular</div>':''}
-      <h3>${p.name}</h3>
-      <div class="price">${p.price}<span class="price-period">${p.period}</span></div>
-      <ul>${p.features.map(f=>`<li>${f}</li>`).join('')}</ul>
-      <button class="btn ${tier==='pro'?'btn-primary':'btn-outline'}" onclick="${p.onclick}">${p.btn}</button>
-    </div>`;
-  }).join('');
+var EMAIL = '';
+
+function doSignup() {
+  var e = document.getElementById('email').value;
+  if (!e) { showMsg('Enter your email', true); return; }
+  EMAIL = e;
+  fetch('/api/free-signup', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:e}) })
+    .then(r => r.json())
+    .then(d => {
+      if (d.api_key) showMsg('API Key: ' + d.api_key, false);
+      else showMsg(d.error || 'Signup failed', true);
+    })
+    .catch(() => showMsg('Server error. Try again.', true));
 }
 
-function checkout(tier) {
-  const email = document.getElementById('signupEmail')?.value;
-  if (!email) {
-    document.getElementById('signupEmail')?.focus();
-    showToast('Enter your email first');
-    return;
-  }
-  fetch('/api/checkout', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({tier, email})
-  }).then(r=>r.json()).then(d=>{
-    if (d.url) window.location.href = d.url;
-    else showToast(d.error || 'Checkout failed');
-  }).catch(()=>showToast('Server error. Try again.'));
+function doCheckout() {
+  var e = document.getElementById('email').value || EMAIL;
+  if (!e) { showMsg('Enter your email above first', true); document.getElementById('email').focus(); return; }
+  EMAIL = e;
+  fetch('/api/checkout', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({tier:'pro',email:e}) })
+    .then(r => r.json())
+    .then(d => {
+      if (d.url) window.location.href = d.url;
+      else showMsg(d.error || 'Checkout error', true);
+    })
+    .catch(() => showMsg('Server error. Try again.', true));
 }
 
-async function signup() {
-  const email = document.getElementById('signupEmail').value;
-  if (!email) return showToast('Enter your email');
-  const res = await fetch('/api/free-signup', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({email})
-  });
-  const data = await res.json();
-  if (data.api_key) {
-    document.getElementById('signupResult').innerHTML =
-      `<strong style="color:var(--green)">Your API key:</strong><br><code style="font-size:15px;word-break:break-all;background:var(--surface);padding:4px 8px;border-radius:4px">${data.api_key}</code><br><small style="color:var(--text2)">Use this in your agent's requests. Save it somewhere safe.</small>`;
-    document.getElementById('signupForm').style.display = 'none';
-  } else {
-    showToast(data.error || 'Signup failed');
-  }
-}
-
-function showToast(msg) {
-  const t = document.createElement('div'); t.className='toast'; t.textContent=msg;
-  document.body.appendChild(t);
-  setTimeout(()=>t.remove(), 3000);
-}
-
-loadPricing();
-
-// Show success message if returning from Stripe checkout
-if (window.location.search.includes('checkout=success')) {
-  showToast('Payment successful! Check your email for API key.');
+function showMsg(txt, isErr) {
+  var m = document.getElementById('msg');
+  m.textContent = txt;
+  m.className = 'msg ' + (isErr ? 'error' : 'success');
 }
 </script>
+
+<footer class="footer">AgentBridge — Built for AI agents that just need to work. &copy; 2025</footer>
 </body>
 </html>
