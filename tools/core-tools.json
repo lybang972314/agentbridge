@@ -1,13 +1,13 @@
 [
   {
     "name": "web-search",
-    "label": "DuckDuckGo Web Search",
-    "description": "Search the web via DuckDuckGo Instant Answers API. Free, no auth.",
-    "base_url": "https://api.duckduckgo.com",
-    "endpoint": "/?q=:query&format=json&no_html=1&skip_disambig=1",
+    "label": "Wikipedia Search",
+    "description": "Search Wikipedia for knowledge. Free, no auth, reliable.",
+    "base_url": "https://en.wikipedia.org",
+    "endpoint": "/w/api.php?action=query&list=search&srsearch=:query&format=json",
     "method": "GET",
     "auth": { "type": "none", "source": "env" },
-    "rate_limit_rpm": 20,
+    "rate_limit_rpm": 30,
     "enabled": true,
     "category": "Search"
   },
