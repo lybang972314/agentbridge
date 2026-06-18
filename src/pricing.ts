@@ -36,7 +36,7 @@ export const PRICING_TIERS: PricingTier[] = [
     id: "pro",
     name: "Pro",
     price: 0.99,
-    stripe_price_id: process.env.STRIPE_PRO_PRICE_ID ?? "price_xxx",
+    stripe_price_id: process.env.STRIPE_PRO_PRICE_ID ?? "price_1TjZuVDvRKhitxiouwcci9qv",
     tools: 9999,
     calls_per_month: 50_000,
     daily_limit: 5_000,
