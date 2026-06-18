@@ -1,10 +1,10 @@
 [
   {
     "name": "web-search",
-    "label": "SearXNG Web Search",
-    "description": "Search the web via self-hosted SearXNG. Returns titles, URLs, and snippets. No API key needed.",
-    "base_url": "https://searxng-production-ad04.up.railway.app",
-    "endpoint": "/search?q=:query&format=json&categories=general",
+    "label": "DuckDuckGo Web Search",
+    "description": "Search the web via DuckDuckGo Instant Answers API. Free, no auth.",
+    "base_url": "https://api.duckduckgo.com",
+    "endpoint": "/?q=:query&format=json&no_html=1&skip_disambig=1",
     "method": "GET",
     "auth": { "type": "none", "source": "env" },
     "rate_limit_rpm": 20,
@@ -26,7 +26,7 @@
   {
     "name": "code-run",
     "label": "Piston Code Sandbox",
-    "description": "Execute code in a secure sandbox. Supports Python, JS, Go, Rust, and more.",
+    "description": "Execute code in a secure sandbox. Supports Python, JS, Go, Rust.",
     "base_url": "https://piston-production-c4b2.up.railway.app",
     "endpoint": "/api/v2/execute",
     "method": "POST",
