@@ -1,6 +1,6 @@
 // Database — SQLite persistence for users, subscriptions, and API keys
 
-import Database from "better-sqlite3";
+import Database, { type Database as DatabaseType } from "better-sqlite3";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { mkdirSync } from "node:fs";
@@ -9,7 +9,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, "..", "data");
 mkdirSync(DATA_DIR, { recursive: true });
 
-const db = new Database(join(DATA_DIR, "gateway.db"));
+const db: DatabaseType = new Database(join(DATA_DIR, "gateway.db"));
 db.pragma("journal_mode = WAL");
 db.pragma("foreign_keys = ON");
 
