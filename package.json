@@ -1,11 +1,11 @@
 {
   "name": "agentbridge",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "AgentBridge — One endpoint for all your AI agent tools. Lean, powerful, HTTP + MCP dual protocol.",
   "type": "module",
   "scripts": {
     "dev": "node --env-file=.env --import tsx --watch src/index.ts",
-    "start": "node dist/index.js",
+    "start": "tsx src/index.ts",
     "mcp": "node --import tsx src/mcp.ts",
     "typecheck": "tsc --noEmit",
     "build": "tsc"
