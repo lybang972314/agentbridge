@@ -6,11 +6,15 @@ import { fileURLToPath } from "node:url";
 import { loadTools } from "./registry.js";
 import { registerGatewayRoutes } from "./gateway.js";
 import { registerApiRoutes } from "./api.js";
+import crypto from "crypto";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PORT = parseInt(process.env.PORT ?? "3100", 10);
 const TOOLS_DIR = join(__dirname, "..", "tools");
 const PUBLIC_DIR = join(__dirname, "..", "public");
+
+// In-memory user store (no SQLite dependency)
+const users = new Map();
 
 async function main() {
   const app = Fastify({ logger: true });
@@ -23,6 +27,17 @@ async function main() {
   registerGatewayRoutes(app);
   registerApiRoutes(app);
 
+  // Free signup endpoint (in-memory, no SQLite)
+  app.post("/api/free-signup", async (req, reply) => {
+    const { email } = req.body as any || {};
+    if (!email || !email.includes("@")) return reply.status(400).send({ error: "Valid email required" });
+    if (users.has(email)) return reply.send({ api_key: users.get(email), message: "Existing account" });
+    const key = "ab_" + crypto.randomUUID().replace(/-/g, "").substring(0, 32);
+    users.set(email, key);
+    return reply.status(201).send({ api_key: key, message: "Welcome!" });
+  });
+
+  // Stripe routes (dynamically loaded if key is set)
   if (process.env.STRIPE_SECRET_KEY) {
     try {
       const { registerStripeRoutes } = await import("./stripe-routes.js");
@@ -32,6 +47,7 @@ async function main() {
   }
 
   app.get("/", async (_req, reply) => reply.sendFile("index.html"));
+
   await app.listen({ port: PORT, host: "0.0.0.0" });
   console.log("AgentBridge online — port " + PORT);
 }
