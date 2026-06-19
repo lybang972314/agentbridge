@@ -1,6 +1,6 @@
 {
   "name": "agentbridge",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "AgentBridge — One endpoint for all your AI agent tools. Lean, powerful, HTTP + MCP dual protocol.",
   "type": "module",
   "scripts": {
