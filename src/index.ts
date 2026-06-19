@@ -13,13 +13,24 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const PORT = parseInt(process.env.PORT ?? "3100", 10);
 const TOOLS_DIR = join(__dirname, "..", "tools");
 const PUBLIC_DIR = join(__dirname, "..", "public");
-
 const users = new Map<string, string>();
+
+// Simple page view counter
+let totalViews = 0;
+let uniqueIPs = new Set<string>();
 
 async function main() {
   const app = Fastify({ logger: true });
   await app.register(cors, { origin: true });
   await app.register(fastifyStatic, { root: PUBLIC_DIR, prefix: "/" });
+
+  // View counter middleware
+  app.addHook("onRequest", async (req) => {
+    if (req.url === "/" || req.url === "/index.html" || !req.url.includes(".")) {
+      totalViews++;
+      uniqueIPs.add(req.ip);
+    }
+  });
 
   const toolCount = loadTools(TOOLS_DIR);
   console.log("Tools loaded:", toolCount);
@@ -27,6 +38,14 @@ async function main() {
   registerGatewayRoutes(app);
   registerApiRoutes(app);
   registerCodeRunRoutes(app);
+
+  // Analytics endpoint
+  app.get("/api/analytics", async () => ({
+    total_views: totalViews,
+    unique_visitors: uniqueIPs.size,
+    registered_users: users.size,
+    uptime: process.uptime(),
+  }));
 
   app.post("/api/free-signup", async (req, reply) => {
     const { email } = (req.body as any) || {};
