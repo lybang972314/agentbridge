@@ -1,0 +1,47 @@
+[
+  {
+    "id": "rate-limit-global",
+    "tool": "*",
+    "description": "Block any tool if called more than 100 times in 1 minute from same IP",
+    "condition": "rate_limit_per_ip",
+    "params": { "max_calls": 100, "window_seconds": 60 },
+    "action": "block",
+    "message": "Rate limit exceeded — too many calls from your IP"
+  },
+  {
+    "id": "block-bulk-email",
+    "tool": "send-email",
+    "description": "Prevent mass email send — max 5 recipients per call",
+    "condition": "param_check",
+    "params": { "field": "to", "operator": "array_length_gt", "value": 5 },
+    "action": "block",
+    "message": "Bulk email blocked by security policy. Max 5 recipients per call."
+  },
+  {
+    "id": "block-dangerous-code",
+    "tool": "code-run",
+    "description": "Block code execution that tries to access filesystem or network",
+    "condition": "code_pattern",
+    "params": { "patterns": ["require(", "import ", "fs.", "child_process", "process.exit", "fetch("] },
+    "action": "block",
+    "message": "Dangerous code pattern detected. File system and network access are blocked."
+  },
+  {
+    "id": "max-body-size",
+    "tool": "*",
+    "description": "Reject requests with body larger than 100KB",
+    "condition": "body_size",
+    "params": { "max_bytes": 102400 },
+    "action": "block",
+    "message": "Request body too large (max 100KB)"
+  },
+  {
+    "id": "block-sql-injection",
+    "tool": "*",
+    "description": "Block parameters that look like SQL injection attempts",
+    "condition": "param_pattern",
+    "params": { "patterns": ["DROP TABLE", "DELETE FROM", "UNION SELECT", "1=1", "' OR '1'='1"] },
+    "action": "block",
+    "message": "Potential SQL injection detected in parameters"
+  }
+]

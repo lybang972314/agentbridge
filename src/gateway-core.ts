@@ -1,6 +1,7 @@
 // Gateway Core — reusable tool execution with hard timeout, graceful error handling
 
 import { getTool, recordCall, checkRateLimit } from "./registry.js";
+import { checkFirewall, loadFirewallRules } from "./firewall.js";
 import { resolveAuth } from "./auth.js";
 import { createLogEntry } from "./logger.js";
 

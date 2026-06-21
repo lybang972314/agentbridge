@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgentBridge — Dashboard</title>
+<style>
+  :root { --bg:#06060c; --surface:#0d0d18; --surface2:#141428; --border:#1e1e38; --text:#e8e8f4; --text2:#8080a8; --green:#3dd68c; --red:#e5484d; --blue:#4671ff; --amber:#ffb224; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  nav { position: sticky; top:0; background: rgba(6,6,12,0.9); backdrop-filter: blur(20px); border-bottom:1px solid var(--border); padding:14px 24px; display:flex; justify-content:space-between; align-items:center; }
+  .logo { font-weight:700; font-size:16px; } .logo span { color:var(--blue); }
+  .container { max-width: 960px; margin:0 auto; padding:20px 24px; }
+  .stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:24px; }
+  .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; }
+  .stat-label { font-size:11px; color:var(--text2); text-transform:uppercase; letter-spacing:0.05em; }
+  .stat-value { font-size:28px; font-weight:700; margin-top:4px; }
+  .log-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .log-table th { text-align:left; padding:8px 10px; color:var(--text2); font-size:11px; text-transform:uppercase; border-bottom:1px solid var(--border); }
+  .log-table td { padding:6px 10px; border-bottom:1px solid rgba(30,30,56,0.5); font-family:'SF Mono',monospace; font-size:12px; }
+  .badge { font-size:10px; padding:2px 6px; border-radius:4px; }
+  .badge-ok { color:var(--green); border:1px solid var(--green); }
+  .badge-err { color:var(--red); border:1px solid var(--red); }
+  .badge-block { color:var(--amber); border:1px solid var(--amber); }
+  .refresh { font-size:12px; color:var(--text2); }
+  .empty { text-align:center; padding:40px; color:var(--text2); }
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Agent<span>Bridge</span> <span style="font-size:12px;color:var(--text2);margin-left:8px">Dashboard</span></div>
+  <div style="display:flex;gap:16px;align-items:center">
+    <span class="refresh" id="status">connecting...</span>
+    <button onclick="refresh()" class="refresh" style="background:none;border:1px solid var(--border);padding:4px 10px;border-radius:6px;cursor:pointer;color:var(--text2)">↻ Refresh</button>
+  </div>
+</nav>
+<div class="container">
+  <div class="stats-row" id="stats"></div>
+  <h3 style="font-size:14px;margin-bottom:12px;color:var(--text2)">Recent Calls</h3>
+  <div id="logs"><div class="empty">Loading...</div></div>
+</div>
+<script>
+function refresh() {
+  Promise.all([
+    fetch('/api/stats').then(r=>r.json()),
+    fetch('/api/logs?limit=50').then(r=>r.json())
+  ]).then(([stats,logs]) => {
+    var s = stats.stats || {};
+    document.getElementById('status').textContent = 'live';
+    document.getElementById('stats').innerHTML = 
+      '<div class="stat-card"><div class="stat-label">Total Calls</div><div class="stat-value">'+(s.total_calls||0)+'</div></div>' +
+      '<div class="stat-card"><div class="stat-label">Success Rate</div><div class="stat-value" style="color:'+((s.success_rate||100)>=95?'var(--green)':'var(--amber)')+'">'+(s.success_rate||100)+'%</div></div>' +
+      '<div class="stat-card"><div class="stat-label">Avg Latency</div><div class="stat-value">'+(s.avg_latency_ms||0)+'<span style="font-size:12px;color:var(--text2)">ms</span></div></div>' +
+      '<div class="stat-card"><div class="stat-label">Tools</div><div class="stat-value">'+(s.enabled_tools||0)+'/'+(s.registered_tools||0)+'</div></div>' +
+      '<div class="stat-card"><div class="stat-label">Errors</div><div class="stat-value" style="color:'+((s.total_errors||0)>0?'var(--red)':'var(--green)')+'">'+(s.total_errors||0)+'</div></div>' +
+      '<div class="stat-card"><div class="stat-label">Visitors</div><div class="stat-value" id="visitorCount">-</div></div>';
+    var logData = logs.logs || [];
+    if(!logData.length) {
+      document.getElementById('logs').innerHTML = '<div class="empty">No calls yet</div>';
+    } else {
+      document.getElementById('logs').innerHTML = '<table class="log-table"><tr><th>Time</th><th>Status</th><th>Tool</th><th>Method</th><th>Latency</th><th>Detail</th></tr>' +
+        logData.map(l => '<tr>' +
+          '<td>'+(l.timestamp||'').slice(11,19)+'</td>' +
+          '<td><span class="badge '+(l.status_code<300?'badge-ok':l.status_code===403?'badge-block':'badge-err')+'">'+l.status_code+'</span></td>' +
+          '<td>'+l.tool_name+'</td>' +
+          '<td>'+l.method+'</td>' +
+          '<td style="text-align:right">'+l.latency_ms+'ms</td>' +
+          '<td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2)">'+(l.error||'')+'</td>' +
+        '</tr>').join('') + '</table>';
+    }
+    fetch('/api/analytics').then(r=>r.json()).then(d=>{
+      if(d) document.getElementById('visitorCount').textContent = d.unique_visitors || '-';
+    }).catch(()=>{});
+  }).catch(() => { document.getElementById('status').textContent = 'offline'; });
+}
+refresh();
+setInterval(refresh, 5000);
+</script>
+</body>
+</html>
